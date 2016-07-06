@@ -14,6 +14,10 @@ use Omnipay\Common\AbstractGateway;
  */
 class Gateway extends AbstractGateway
 {
+
+    const PAY_SOURCE_QW = 'qw';
+    const PAY_SOURCE_MOBILE = 'mobile';
+
     /**
      * {@inheritdoc}
      */
@@ -28,10 +32,54 @@ class Gateway extends AbstractGateway
     public function getDefaultParameters()
     {
         return [
+            'apiId'       => '',
+            'apiPassword' => '',
             'providerId'    => '',
-            'secretKey'     => '',
-            'testMode'      => false,
         ];
+    }
+
+    /**
+     * Get the API ID.
+     *
+     * @return string provider ID
+     */
+    public function getApiId()
+    {
+        return $this->getParameter('apiId');
+    }
+
+    /**
+     * Set the API ID.
+     *
+     * @param string $value
+     *
+     * @return self
+     */
+    public function setApiId($value)
+    {
+        return $this->setParameter('apiId', $value);
+    }
+
+    /**
+     * Get the api password.
+     *
+     * @return string secret key
+     */
+    public function getApiPassword()
+    {
+        return $this->getParameter('apiPassword');
+    }
+
+    /**
+     * Set the api password.
+     *
+     * @param string $value
+     *
+     * @return self
+     */
+    public function setApiPassword($value)
+    {
+        return $this->setParameter('apiPassword', $value);
     }
 
     /**
@@ -57,24 +105,45 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * Get the secret key.
-     *
-     * @return string secret key
-     */
-    public function getSecretKey()
-    {
-        return $this->getParameter('secretKey');
-    }
-
-    /**
-     * Set the secret key.
-     *
-     * @param string $value secret key
+     * @param string $value
      *
      * @return self
      */
-    public function setSecretKey($value)
+    public function setPaySource($value)
     {
-        return $this->setParameter('secretKey', $value);
+        return $this->setParameter('paySource', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaySource()
+    {
+        return $this->getParameter('paySource');
+    }
+
+    public function purchase(array $parameters = array())
+    {
+        return $this->authorize($parameters);
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function authorize(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\Qiwi\Message\InvoiceRequest', $parameters);
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function getPurchaseStatus(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\Qiwi\Message\InvoiceStatusRequest', $parameters);
     }
 }
