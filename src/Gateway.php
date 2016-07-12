@@ -122,19 +122,30 @@ class Gateway extends AbstractGateway
         return $this->getParameter('paySource');
     }
 
-    public function purchase(array $parameters = array())
+    /**
+     * @return string
+     */
+    public function getNotifyPassword()
     {
-        return $this->authorize($parameters);
+        return $this->getParameter('notifyPassword');
     }
 
     /**
-     * @param array $parameters
-     *
-     * @return \Omnipay\Common\Message\AbstractRequest
+     * @return string
      */
-    public function authorize(array $parameters = array())
+    public function setNotifyPassword($value)
+    {
+        return $this->setParameter('notifyPassword', $value);
+    }
+
+    public function purchase(array $parameters = array())
     {
         return $this->createRequest('\Omnipay\Qiwi\Message\InvoiceRequest', $parameters);
+    }
+
+    public function completePurchase(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\Qiwi\Message\CompletePurchaseRequest', $parameters);
     }
 
     /**
