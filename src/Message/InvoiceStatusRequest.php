@@ -2,6 +2,11 @@
 
 namespace Omnipay\Qiwi\Message;
 
+/**
+ * Class InvoiceStatusRequest
+ *
+ * @package Omnipay\Qiwi\Message
+ */
 class InvoiceStatusRequest extends AuthorizeRequest
 {
     /**
@@ -11,7 +16,7 @@ class InvoiceStatusRequest extends AuthorizeRequest
      */
     public function getData()
     {
-        $this->validate('transactionId', 'providerId');
+        $this->validate('transactionId', 'providerId', 'amount', 'currency');
         return array();
     }
 
@@ -28,6 +33,22 @@ class InvoiceStatusRequest extends AuthorizeRequest
      */
     protected function createResponse(array $data)
     {
-        return $this->response = new Response($this, $data);
+
+        if (!array_key_exists('response', $data)) {
+            throw new \InvalidArgumentException('Invalid response');
+        }
+
+        if (array_key_exists('bill', $data['response'])) {
+            if ((double)$this->getAmount() !== (double)$data['response']['bill']['amount']) {
+                throw new \InvalidArgumentException('Payment amount does not match');
+            }
+
+            if ($this->getCurrency() !== $data['response']['bill']['ccy']) {
+                throw new \InvalidArgumentException('Currency does not match');
+            }
+        } // else Invalid code response
+
+
+        return $this->response = new InvoiceStatusResponse($this, $data);
     }
 }
