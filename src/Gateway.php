@@ -14,7 +14,6 @@ use Omnipay\Common\AbstractGateway;
  */
 class Gateway extends AbstractGateway
 {
-
     const PAY_SOURCE_QW = 'qw';
     const PAY_SOURCE_MOBILE = 'mobile';
 

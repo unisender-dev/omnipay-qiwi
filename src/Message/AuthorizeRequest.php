@@ -75,16 +75,16 @@ abstract class AuthorizeRequest extends AbstractRequest
 
     public function sendData($data)
     {
-        $httpRequest = $this->httpClient->createRequest(
+        $headers = ['Authorization' => 'Basic ' . base64_encode($this->getApiId() . ':' . $this->getApiPassword())];
+
+        $httpResponse = $this->httpClient->request(
             $this->getHttpMethod(),
             $this->getEndpoint(),
-            array('Authorization' => 'Basic ' . base64_encode($this->getApiId() . ':' . $this->getApiPassword())),
-            $data
+            $headers,
+            http_build_query($data)
         );
 
-        $httpResponse = $httpRequest->send();
-
-        return $this->response = $this->createResponse($httpResponse->json());
+        return $this->response = $this->createResponse(json_decode($httpResponse->getBody()->getContents(), true));
     }
 
     /**

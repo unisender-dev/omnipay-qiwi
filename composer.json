@@ -1,6 +1,7 @@
 {
     "name": "unisender/omnipay-qiwi",
     "type": "library",
+    "license": "MIT",
     "description": "Qiwi driver for Omnipay PHP payment library",
     "keywords": [
         "qiwi",
@@ -9,10 +10,13 @@
         "pay",
         "payment"
     ],
-    "homepage": "http://gitlab.int.unisender.com/unisender-ng/omnipay-qiwi",
-    "license": "MIT",
     "require": {
-        "omnipay/common": "~2.3"
+        "php": ">=7.0",
+        "ext-json": "*",
+        "omnipay/common": "^3"
+    },
+    "require-dev": {
+        "omnipay/tests": "^3"
     },
     "autoload": {
         "psr-4": {
